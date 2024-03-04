@@ -73,7 +73,7 @@ RSpec.describe VendingMachine do
     subject { vending_machine.get_change }
 
     it "calls VendingMachine::ChangeCalculator" do
-      expect(VendingMachine::ChangeCalculator).to receive(:call).with(0, 1)
+      expect(VendingMachine::ChangeCalculator).to receive(:call).with(0, 1, { 0.25=>0, 0.5=>0, 1=>0, 2=>0, 3=>0, 5=>0 }).and_call_original
 
       subject
     end

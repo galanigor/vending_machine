@@ -16,8 +16,9 @@ class Interactions::GiveChange < Interactions::Base
   end
 
   def give_change
-    print_message("Please take your change from the change compartment.")
-    print_message(change_stringified)
+    print_message("Please take your change from the change compartment: #{change_stringified}")
+  rescue VendingMachine::ChangeCalculator::NotEnoughCoinsForChange
+    print_warning("Sorry we don't have enough coins for change")
   end
 
   def change_stringified

@@ -11,7 +11,7 @@ class Interactions::MaybeGetAnotherProduct < Interactions::Base
   attr_reader :answer
 
   def ask_for_another_product
-    print_message("Would you like to get abother product? (y/n)")
+    print_message("Would you like to get another product? (y/n)")
   end
 
   def get_answer

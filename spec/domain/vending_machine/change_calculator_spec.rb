@@ -3,8 +3,11 @@ require "spec_helper"
 RSpec.describe VendingMachine::ChangeCalculator do
   let(:total_sum) { 26.75 }
   let(:used_sum) { 10 }
+  let(:stored_coins) do
+    VendingMachine::AVAILABLE_COINS.zip(Array.new(VendingMachine::AVAILABLE_COINS.count) { 5 }).to_h
+  end
 
-  subject { described_class.call(total_sum, used_sum) }
+  subject { described_class.call(total_sum, used_sum, stored_coins) }
 
   it "returns the change in expected format" do
     expected_change = [

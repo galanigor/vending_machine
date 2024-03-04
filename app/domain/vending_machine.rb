@@ -1,6 +1,7 @@
 class VendingMachine
   class SlotIdTaken < StandardError; end
   class NoSlotWithId < StandardError; end
+  class InvalidCoinsFound < StandardError; end
 
   AVAILABLE_COINS = [0.25, 0.5, 1, 2, 3, 5].freeze
 
@@ -14,6 +15,7 @@ class VendingMachine
   def initialize
     @slots = []
     @inserted_coins = []
+    @stored_coins = AVAILABLE_COINS.zip(Array.new(AVAILABLE_COINS.count) { 0 }).to_h
   end
 
   def add_slot(id:, product_name:, product_count:, product_cost:)
@@ -29,7 +31,11 @@ class VendingMachine
   end
 
   def insert_coins(coins)
+    validate_coins!(coins)
+
     @inserted_coins = coins
+
+    store_coins(coins)
   end
 
   def get_product_cost(slot_id)
@@ -57,7 +63,9 @@ class VendingMachine
   end
 
   def get_change
-    VendingMachine::ChangeCalculator.call(inserted_sum, selected_slot.product_cost)
+    VendingMachine::ChangeCalculator.call(inserted_sum, selected_slot.product_cost, stored_coins).tap do |change|
+      remove_stored_coins(change)
+    end
   end
 
   def reset_inputs
@@ -75,11 +83,27 @@ class VendingMachine
     get_slot_by_id(selected_slot_id)
   end
 
+  def store_coins(coins)
+    validate_coins!(coins)
+
+    coins.each { |coin| stored_coins[coin] += 1 }
+  end
+
   private
+
+  attr_reader :stored_coins
   
   def validate_slot_id!(slot_id)
     return if !slots.map(&:id).include?(slot_id) 
 
     raise SlotIdTaken.new("Slot ID #{slot_id} have already been taken.")
+  end
+
+  def validate_coins!(coins)
+    raise InvalidCoinsFound if !self.class.invalid_coins(coins).empty?
+  end
+
+  def remove_stored_coins(change)
+    change.each { |coins| stored_coins[coins[:value]] -= coins[:count] }
   end
 end
