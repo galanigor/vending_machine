@@ -14,7 +14,7 @@ class Interactions::AskForCoins < Interactions::Base
 
   def ask_for_coins
     print_message("Please insert coins. Available coins: #{VendingMachine::AVAILABLE_COINS.map(&:to_s).join(", ")}")
-    print_hint("To insert multiple coins, type them in using the ',' separation.")
+    print_hint("To insert multiple coins, type them in using the ',' separator.")
   end
 
   def get_coins
