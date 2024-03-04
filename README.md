@@ -13,6 +13,7 @@ asdf install ruby
 ### Install gems
 
 ```
+gem install bundler
 bundle install
 ```
 
