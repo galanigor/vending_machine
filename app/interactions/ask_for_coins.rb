@@ -29,7 +29,7 @@ class Interactions::AskForCoins < Interactions::Base
     
     print_message("You have inserted a total of #{coins.inject(:+)} coins.")
 
-    vending_machine.inserted_coins = coins
+    vending_machine.insert_coins(coins)
   end
 
   def process_invalid_coins

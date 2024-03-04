@@ -9,10 +9,10 @@ class Application
   def init_vending_machine
     vending_machine = VendingMachine.new
 
-    vending_machine.add_slot(VendingMachine::Slot.new(1, "Snickers", 4, 10))
-    vending_machine.add_slot(VendingMachine::Slot.new(2, "Cola", 5, 15.5))
-    vending_machine.add_slot(VendingMachine::Slot.new(3, "M&M's", 0, 5))
-    vending_machine.add_slot(VendingMachine::Slot.new(4, "Orbit", 2, 2.25))
+    vending_machine.add_slot(id: 1, product_name: "Snickers", product_count: 4, product_cost: 10)
+    vending_machine.add_slot(id: 2, product_name: "Cola", product_count: 5, product_cost: 15.5)
+    vending_machine.add_slot(id: 3, product_name: "M&M's", product_count: 0, product_cost: 5)
+    vending_machine.add_slot(id: 4, product_name: "Orbit", product_count: 2, product_cost: 2.25)
 
     Store[:vending_machine] = vending_machine
   end

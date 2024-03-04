@@ -30,7 +30,7 @@ class Interactions::AskForProduct < Interactions::Base
     return process_not_enough_money if not_enough_money?
     return process_product_out_of_stock if product_out_of_stock?
     
-    vending_machine.selected_slot_id = slot_id
+    vending_machine.select_slot(slot_id)
   end
 
   def process_invalid_slot_id

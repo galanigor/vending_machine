@@ -1,5 +1,6 @@
 class VendingMachine
   class SlotIdTaken < StandardError; end
+  class NoSlotWithId < StandardError; end
 
   AVAILABLE_COINS = [0.25, 0.5, 1, 2, 3, 5].freeze
 
@@ -12,12 +13,23 @@ class VendingMachine
 
   def initialize
     @slots = []
+    @inserted_coins = []
   end
 
-  def add_slot(slot)
-    validate_slot_id!(slot.id)
+  def add_slot(id:, product_name:, product_count:, product_cost:)
+    validate_slot_id!(id)
   
-    slots << slot
+    slots << Slot.new(id, product_name, product_count, product_cost)
+  end
+
+  def select_slot(slot_id)
+    @selected_slot_id = slot_id
+
+    get_slot_by_id(slot_id)
+  end
+
+  def insert_coins(coins)
+    inserted_coins = coins
   end
 
   def get_product_cost(slot_id)
@@ -37,7 +49,7 @@ class VendingMachine
   end
 
   def inserted_sum
-    inserted_coins.inject(:+)
+    inserted_coins.inject(:+) || 0
   end
 
   def no_change_needed?
@@ -49,8 +61,18 @@ class VendingMachine
   end
 
   def reset_inputs
-    inserted_coins = nil
+    inserted_coins = []
     selected_slot_id = nil
+  end
+
+  def get_slot_by_id(slot_id)
+    slots.find { |slot| slot.id == slot_id }.tap do |slot|
+      raise NoSlotWithId if slot.nil?
+    end
+  end
+
+  def selected_slot
+    get_slot_by_id(selected_slot_id)
   end
 
   private
@@ -59,13 +81,5 @@ class VendingMachine
     return if !slots.map(&:id).include?(slot_id) 
 
     raise SlotIdTaken.new("Slot ID #{slot_id} have already been taken.")
-  end
-
-  def get_slot_by_id(slot_id)
-    slots.find { |slot| slot.id == slot_id }
-  end
-
-  def selected_slot
-    get_slot_by_id(selected_slot_id)
   end
 end
