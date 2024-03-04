@@ -16,6 +16,10 @@ module Interactions
         new.ensure_can_run!
       end
     end
+
+    def ensure_can_run!; end
+
+    private
   
     def print_message(message)
       puts message
@@ -46,7 +50,9 @@ module Interactions
     def get_input_boolean
       ["y", "Y"].include?(get_input)
     end
-  
-    def ensure_can_run!; end
+
+    def vending_machine
+      Store[:vending_machine]
+    end
   end
 end
