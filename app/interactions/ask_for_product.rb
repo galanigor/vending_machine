@@ -5,8 +5,8 @@ class Interactions::AskForProduct < Interactions::Base
   end
 
   def ensure_can_run!
-    raise Errors::NoCoinsInserted if inserted_coins.nil?
-    raise Errors::VendingMachineNotInitialized if vending_machine.nil?
+    raise Interactions::Errors::VendingMachineNotInitialized if vending_machine.nil?
+    raise Interactions::Errors::NoCoinsInserted if vending_machine.inserted_coins.nil?
   end
 
   private
@@ -28,8 +28,9 @@ class Interactions::AskForProduct < Interactions::Base
     return process_no_product if slot_id.nil?
     return process_invalid_slot_id if slot_id_invalid?
     return process_not_enough_money if not_enough_money?
+    return process_product_out_of_stock if product_out_of_stock?
     
-    Store[:selected_slot_id] = slot_id
+    vending_machine.selected_slot_id = slot_id
   end
 
   def process_invalid_slot_id
@@ -56,6 +57,12 @@ class Interactions::AskForProduct < Interactions::Base
     get_slot_id
   end
 
+  def process_product_out_of_stock
+    print_warning("Product is out of stock. Please select another product.")
+
+    get_slot_id
+  end
+
   def reinsert_coins
     Interactions.run(Interactions::AskForCoins)
   end
@@ -64,19 +71,15 @@ class Interactions::AskForProduct < Interactions::Base
     !vending_machine.slot_available?(slot_id)
   end
 
+  def product_out_of_stock?
+    vending_machine.product_out_of_stock?(slot_id)
+  end
+
   def not_enough_money?
     total_sum < vending_machine.get_product_cost(slot_id)
   end
 
   def total_sum
-    inserted_coins.inject(:+)
-  end
-
-  def vending_machine
-    Store[:vending_machine]
-  end
-
-  def inserted_coins
-    Store[:inserted_coins]
+    vending_machine.inserted_sum
   end
 end

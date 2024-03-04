@@ -4,7 +4,7 @@ class Interactions::ShowVendingMachineSlots < Interactions::Base
   end
 
   def ensure_can_run!
-    raise Errors::VendingMachineNotInitialized if vending_machine.nil?
+    raise Interactions::Errors::VendingMachineNotInitialized if vending_machine.nil?
   end
 
   private

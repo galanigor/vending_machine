@@ -4,6 +4,10 @@ class Interactions::AskForCoins < Interactions::Base
     get_coins
   end
 
+  def ensure_can_run!
+    raise Interactions::Errors::VendingMachineNotInitialized if vending_machine.nil?
+  end
+
   private
 
   attr_reader :coins
@@ -25,7 +29,7 @@ class Interactions::AskForCoins < Interactions::Base
     
     print_message("You have inserted a total of #{coins.inject(:+)} coins.")
 
-    Store[:inserted_coins] = coins
+    vending_machine.inserted_coins = coins
   end
 
   def process_invalid_coins
