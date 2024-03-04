@@ -9,7 +9,7 @@ class VendingMachine::ChangeCalculator
     @total_sum = total_sum
     @used_sum = used_sum
     @stored_coins = stored_coins
-    @change_recidue = 0
+    @change_residue = 0
   end
 
   def call
@@ -21,19 +21,19 @@ class VendingMachine::ChangeCalculator
 
   private
 
-  attr_reader :total_sum, :used_sum, :stored_coins, :change_recidue
+  attr_reader :total_sum, :used_sum, :stored_coins, :change_residue
 
   def prepare_change
-    @change_recidue = VendingMachine::AVAILABLE_COINS.sort.reverse.inject(leftover) do |recidue, coin|
-      next recidue if recidue == 0 || recidue < coin
+    @change_residue = VendingMachine::AVAILABLE_COINS.sort.reverse.inject(leftover) do |residue, coin|
+      next residue if residue == 0 || residue < coin
 
-      required_change_count = (recidue / coin).floor
+      required_change_count = (residue / coin).floor
       available_change_count = stored_coins[coin]
       actual_change_count = [required_change_count, available_change_count].min
       
       change << { value: coin, count: actual_change_count } if actual_change_count > 0
       
-      recidue - (coin * actual_change_count)
+      residue - (coin * actual_change_count)
     end
   end
 
@@ -46,6 +46,6 @@ class VendingMachine::ChangeCalculator
   end
 
   def validate_change!
-    raise NotEnoughCoinsForChange if @change_recidue > 0
+    raise NotEnoughCoinsForChange if @change_residue > 0
   end
 end
