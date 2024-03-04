@@ -29,7 +29,7 @@ class VendingMachine
   end
 
   def insert_coins(coins)
-    inserted_coins = coins
+    @inserted_coins = coins
   end
 
   def get_product_cost(slot_id)
