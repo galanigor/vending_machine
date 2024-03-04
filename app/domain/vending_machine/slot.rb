@@ -7,4 +7,12 @@ class VendingMachine::Slot
     @product_count = product_count
     @product_cost = product_cost
   end
+
+  def out_of_stock?
+    product_count == 0
+  end
+
+  def reduce_product_count
+    @product_count -= 1
+  end
 end
